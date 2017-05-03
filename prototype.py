@@ -3,9 +3,13 @@
 
 import time, sys
 from ws2801 import ws2801 
-LEDs=ws2801() # Set the name of our module 
-NUMBER_OF_PIXELS=13 # Set the number of pixels
+from tlc5947 import tlc5947
+#LEDs=ws2801() # Set the name of our module 
+LEDs=tlc5947(23) # Set the name of our module 
+NUMBER_OF_PIXELS=8 # Set the number of pixels
 ledpixels = [0] * NUMBER_OF_PIXELS # set up the pixel array
+
+print "XLAT=",LEDs.LAT
 
 L0COLOR = [0,0,0]
 L1COLOR = [255,255,0]
@@ -19,6 +23,7 @@ L8COLOR = [100,0,255]
 RCOLORS = [L0COLOR,L1COLOR,L2COLOR,L3COLOR,L4COLOR,L5COLOR,L6COLOR,L7COLOR,L8COLOR]
 
 def setresonator(index, level, energy) :
+	print "resonator", index, level, energy
 	r = RCOLORS[level][0] * energy / 8000
 	g = RCOLORS[level][1] * energy / 8000
 	b = RCOLORS[level][2] * energy / 8000
@@ -43,14 +48,14 @@ try:
 	LEDs.cls(ledpixels)
 	time.sleep(0.5)
 
-	setfaction(0,100)
-	LEDs.writestrip(ledpixels)
-	time.sleep(1)
+	#setfaction(0,100)
+	#LEDs.writestrip(ledpixels)
+	#time.sleep(1)
 
-	setfaction(1,100)
+	#setfaction(1,100)
 
 	for i in range(0, 8):
-		setresonator(i, i+1, 8000)
+		setresonator(0, i+1, 8000)
 		LEDs.writestrip(ledpixels)
       		time.sleep(0.5)
 
