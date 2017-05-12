@@ -38,7 +38,7 @@ class tlc5947:
 		spidev.write(chr(((pixels[i] & 0xFF) >> 4) & 0x0F))
 		spidev.write(chr(((pixels[i] & 0xFF) << 4) & 0xF0))
 	spidev.close()
-	print "SLAT=",self.LAT
+	#print "SLAT=",self.LAT
 	GPIO.output(self.LAT,GPIO.HIGH)
 	time.sleep(0.1)
 	GPIO.output(self.LAT,GPIO.LOW)

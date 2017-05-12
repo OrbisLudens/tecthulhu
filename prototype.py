@@ -9,7 +9,12 @@ LEDs=tlc5947(23) # Set the name of our module
 NUMBER_OF_PIXELS=8 # Set the number of pixels
 ledpixels = [0] * NUMBER_OF_PIXELS # set up the pixel array
 
+from mixer import tsound
+audio = tsound()
+
 print "XLAT=",LEDs.LAT
+
+ENERGYL = [0,1,2,4,8,16,32,64,128,256,256,512,1000,2000,4000,8000]
 
 L0COLOR = [0,0,0]
 L1COLOR = [255,255,0]
@@ -23,7 +28,7 @@ L8COLOR = [100,0,255]
 RCOLORS = [L0COLOR,L1COLOR,L2COLOR,L3COLOR,L4COLOR,L5COLOR,L6COLOR,L7COLOR,L8COLOR]
 
 def setresonator(index, level, energy) :
-	print "resonator", index, level, energy
+	#print "resonator", index, level, energy
 	r = RCOLORS[level][0] * energy / 8000
 	g = RCOLORS[level][1] * energy / 8000
 	b = RCOLORS[level][2] * energy / 8000
@@ -55,9 +60,15 @@ try:
 	#setfaction(1,100)
 
 	for i in range(0, 8):
-		setresonator(0, i+1, 8000)
-		LEDs.writestrip(ledpixels)
-      		time.sleep(0.5)
+		audio.deploy()
+		for j in range(1000, 9000, 1000):
+			setresonator(0, i+1, j)
+			LEDs.writestrip(ledpixels)
+			time.sleep(0.025)
+		for j in range(8000, 0, -1000):
+			setresonator(0, i+1, j)
+			LEDs.writestrip(ledpixels)
+			time.sleep(0.025)
 
 
 	LEDs.cls(ledpixels)
