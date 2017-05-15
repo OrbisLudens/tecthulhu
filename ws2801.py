@@ -11,12 +11,10 @@ import RPi.GPIO as GPIO, time, os, sys
 class ws2801:
 
  # import RPi.GPIO as GPIO, time, os
- NUMBER_OF_PIXELS=18 # set number of pixels in your strip
+ NUMBER_OF_PIXELS=16 # set number of pixels in your strip
  DEBUG = 1
  GPIO.setmode(GPIO.BCM)
 
- SPICLK = 23 # The SPI clock pin on the raspberry pi, pin 23
- SPIDO = 19 # The SPI data line (MOSI) on the raspberry pi, pin 19
  ledpixels = [0] * NUMBER_OF_PIXELS
 
  def writestrip(self, pixels):

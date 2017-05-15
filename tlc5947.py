@@ -44,6 +44,35 @@ class tlc5947:
 	GPIO.output(self.LAT,GPIO.LOW)
 	time.sleep(0.002)
 
+ def teststrip(self):
+	spidev = file("/dev/spidev0.0", "w")
+	for i in range(0, 6):
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+		spidev.write(chr(0))
+
+	spidev.write(chr(0))
+	spidev.write(chr(0x0F))
+	spidev.write(chr(0xFF))
+	spidev.write(chr(0))
+	spidev.write(chr(0))
+	spidev.write(chr(0))
+	spidev.write(chr(0))
+	spidev.write(chr(0))
+	spidev.write(chr(0))
+	spidev.close()
+	#print "SLAT=",self.LAT
+	GPIO.output(self.LAT,GPIO.HIGH)
+	time.sleep(0.1)
+	GPIO.output(self.LAT,GPIO.LOW)
+	time.sleep(2.002)
+
  def Color(self, r, g, b):
 	return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF)
 
@@ -92,10 +121,11 @@ class tlc5947:
 
  def main(self):
    try:  
-    self.colorwipe(self.ledpixels, self.Color(255, 0, 0), 0.05)
-    self.colorwipe(self.ledpixels, self.Color(0, 255, 0), 0.05)
-    self.colorwipe(self.ledpixels, self.Color(0, 0, 255), 0.05)
-    self.rainbowCycle(self.ledpixels, 0.00)
+    #self.colorwipe(self.ledpixels, self.Color(255, 0, 0), 0.05)
+    #self.colorwipe(self.ledpixels, self.Color(0, 255, 0), 0.05)
+    #self.colorwipe(self.ledpixels, self.Color(0, 0, 255), 0.05)
+    #self.rainbowCycle(self.ledpixels, 0.00)
+    self.teststrip()
     self.cls(self.ledpixels)
    
    except KeyboardInterrupt:
@@ -105,5 +135,5 @@ class tlc5947:
 
 
 if  __name__ =='__main__':
-        LEDs=tlc5947()
+        LEDs=tlc5947(23)
         LEDs.main()

@@ -4,15 +4,19 @@
 import time, sys
 from ws2801 import ws2801 
 from tlc5947 import tlc5947
+
 #LEDs=ws2801() # Set the name of our module 
 LEDs=tlc5947(23) # Set the name of our module 
-NUMBER_OF_PIXELS=8 # Set the number of pixels
+NUMBER_OF_PIXELS=16 # Set the number of pixels
 ledpixels = [0] * NUMBER_OF_PIXELS # set up the pixel array
 
 from mixer import tsound
 audio = tsound()
 
-print "XLAT=",LEDs.LAT
+from restclient import restclient
+client = restclient()
+
+#print "XLAT=",LEDs.LAT
 
 ENERGYL = [0,1,2,4,8,16,32,64,128,256,256,512,1000,2000,4000,8000]
 
@@ -40,6 +44,8 @@ FRCOLOR = [0,0,255]
 FCOLORS = [FNCOLOR,FECOLOR,FRCOLOR]
 
 def setfaction(faction, energy) :
+	if faction == 0:
+		energy = 100
 	r = FCOLORS[faction][0] * energy / 100
 	g = FCOLORS[faction][1] * energy / 100
 	b = FCOLORS[faction][2] * energy / 100
@@ -47,6 +53,10 @@ def setfaction(faction, energy) :
 	LEDs.setpixelcolor(ledpixels, 9, LEDs.Color(r, g, b))
 	LEDs.setpixelcolor(ledpixels, 10, LEDs.Color(r, g, b))
 	LEDs.setpixelcolor(ledpixels, 11, LEDs.Color(r, g, b))
+	LEDs.setpixelcolor(ledpixels, 12, LEDs.Color(r, g, b))
+	LEDs.setpixelcolor(ledpixels, 13, LEDs.Color(r, g, b))
+	LEDs.setpixelcolor(ledpixels, 14, LEDs.Color(r, g, b))
+	LEDs.setpixelcolor(ledpixels, 15, LEDs.Color(r, g, b))
 
 
 try: 
@@ -59,16 +69,38 @@ try:
 
 	#setfaction(1,100)
 
-	for i in range(0, 8):
-		audio.deploy()
-		for j in range(1000, 9000, 1000):
-			setresonator(0, i+1, j)
-			LEDs.writestrip(ledpixels)
-			time.sleep(0.025)
-		for j in range(8000, 0, -1000):
-			setresonator(0, i+1, j)
-			LEDs.writestrip(ledpixels)
-			time.sleep(0.025)
+	#LEDs.setpixelcolor(ledpixels, 0, LEDs.Color(0,0,255))
+	#LEDs.writestrip(ledpixels)
+	#time.sleep(2)
+
+	resdict = {'N':0,'NE':1,'E':2,'SE':3,'S':4,'SW':5,'W':6,'NW':7}
+
+        while True:
+		reslevel = [0] * 8
+		reshealth = [0] * 8
+
+		data = client.getjson()
+		if data != 0:
+			print data
+
+			faction = int(data['status']['controllingFaction'])
+			health = data['status']['health']
+			setfaction(faction, health)
+
+			dres = data['status']['resonators']
+				
+			for r in range(0, len(dres)):
+				position = resdict[dres[r]['position']]
+				reslevel[position] = dres[r]['level']
+				reshealth[position] = dres[r]['health']
+
+			for r in range(0, 8):
+				setresonator(r, reslevel[r], reshealth[r]*10)
+				#audio.deploy()
+
+
+		LEDs.writestrip(ledpixels)
+		time.sleep(1)
 
 
 	LEDs.cls(ledpixels)
