@@ -75,6 +75,12 @@ try:
 
 	resdict = {'N':0,'NE':1,'E':2,'SE':3,'S':4,'SW':5,'W':6,'NW':7}
 
+	oldfaction = 0
+	oldhealth = 0
+	oldreslevel = [0] * 8
+	oldreshealth = [0] * 8
+	oldinitialized = False
+
         while True:
 		reslevel = [0] * 8
 		reshealth = [0] * 8
@@ -96,10 +102,29 @@ try:
 
 			for r in range(0, 8):
 				setresonator(r, reslevel[r], reshealth[r]*10)
-				#audio.deploy()
 
 
 		LEDs.writestrip(ledpixels)
+		# if old values have been initialized, compare to old values
+		if oldinitialized:
+			if faction == oldfaction:
+				isdeploy = False
+				for r in range(0, 8):
+					if reslevel[r] > oldreslevel[r]:
+						isdeploy = True
+				if isdeploy:
+					audio.deploy()
+					
+		else:
+			oldinitialized = True
+			
+		# copy current to old
+		oldfaction = faction
+		oldhealth = health
+		for r in range(0, 8):
+			oldreslevel[r] = reslevel[r]
+			oldreshealth[r] = reshealth[r]
+
 		time.sleep(1)
 
 
