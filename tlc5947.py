@@ -10,7 +10,7 @@ import RPi.GPIO as GPIO, time, os, sys
 class tlc5947:
 
  # import RPi.GPIO as GPIO, time, os
- NUMBER_OF_PIXELS=8 # set number of pixels in your strip
+ NUMBER_OF_PIXELS=16 # set number of pixels in your strip
  DEBUG = 1
  LAT = 19 # The Latch control to transfer shift register into display register
  GPIO.setmode(GPIO.BCM)
@@ -74,7 +74,7 @@ class tlc5947:
 	time.sleep(2.002)
 
  def Color(self, r, g, b):
-	return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF)
+	return ((g & 0xFF) << 16) | ((r & 0xFF) << 8) | (b & 0xFF)
 
  def setpixelcolor(self, pixels, n, r, g, b):
 	if (n >= len(pixels)):
@@ -125,7 +125,18 @@ class tlc5947:
     #self.colorwipe(self.ledpixels, self.Color(0, 255, 0), 0.05)
     #self.colorwipe(self.ledpixels, self.Color(0, 0, 255), 0.05)
     #self.rainbowCycle(self.ledpixels, 0.00)
-    self.teststrip()
+    #self.teststrip()
+    self.ledpixels[0] = 0xff00
+    self.ledpixels[1] = 0x00ff
+    self.ledpixels[2] = 0x00ff
+    self.ledpixels[3] = 0x00ff
+    self.ledpixels[4] = 0x00ff
+    self.ledpixels[5] = 0x00ff
+    self.ledpixels[6] = 0x00ff
+    self.ledpixels[7] = 0x00ff
+    self.ledpixels[8] = 0x0505
+    self.writestrip(self.ledpixels)
+    time.sleep(10)
     self.cls(self.ledpixels)
    
    except KeyboardInterrupt:

@@ -46,6 +46,7 @@ FCOLORS = [FNCOLOR,FECOLOR,FRCOLOR]
 def setfaction(faction, energy) :
 	if faction == 0:
 		energy = 100
+	print "Factionenergy", energy
 	r = FCOLORS[faction][0] * energy / 100
 	g = FCOLORS[faction][1] * energy / 100
 	b = FCOLORS[faction][2] * energy / 100
@@ -89,16 +90,22 @@ try:
 		if data != 0:
 			print data
 
-			faction = int(data['status']['controllingFaction'])
-			health = data['status']['health']
+			factionname = data['externalApiPortal']['controllingFaction']
+			if factionname == "Enlightened":
+				faction = 1
+			elif factionname == "Resistance":
+				faction = 2
+			else:
+				faction = 0
+			health = int(data['externalApiPortal']['health'])
 			setfaction(faction, health)
 
-			dres = data['status']['resonators']
+			dres = data['externalApiPortal']['resonators']
 				
 			for r in range(0, len(dres)):
 				position = resdict[dres[r]['position']]
-				reslevel[position] = dres[r]['level']
-				reshealth[position] = dres[r]['health']
+				reslevel[position] = int(dres[r]['level'])
+				reshealth[position] = int(dres[r]['health'])
 
 			for r in range(0, 8):
 				setresonator(r, reslevel[r], reshealth[r]*10)
