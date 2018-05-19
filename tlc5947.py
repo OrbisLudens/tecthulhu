@@ -14,7 +14,7 @@ class tlc5947:
  DEBUG = 1
  LAT = 19 # The Latch control to transfer shift register into display register
  GPIO.setmode(GPIO.BCM)
- GPIO.setwarnings(False)
+ #GPIO.setwarnings(False)
 
  ledpixels = [0] * NUMBER_OF_PIXELS
 
@@ -126,15 +126,15 @@ class tlc5947:
     #self.colorwipe(self.ledpixels, self.Color(0, 0, 255), 0.05)
     #self.rainbowCycle(self.ledpixels, 0.00)
     #self.teststrip()
-    self.ledpixels[0] = 0xff00
-    self.ledpixels[1] = 0x00ff
-    self.ledpixels[2] = 0x00ff
-    self.ledpixels[3] = 0x00ff
-    self.ledpixels[4] = 0x00ff
-    self.ledpixels[5] = 0x00ff
-    self.ledpixels[6] = 0x00ff
-    self.ledpixels[7] = 0x00ff
-    self.ledpixels[8] = 0x0505
+    self.ledpixels[0] = 0xff
+    self.ledpixels[1] = 0xffff
+    self.ledpixels[2] = 0xff00
+    self.ledpixels[3] = 0xffff00
+    self.ledpixels[4] = 0xff0000
+    self.ledpixels[5] = 0xff00ff
+    self.ledpixels[6] = 0xffffff
+    self.ledpixels[7] = 0xff5555
+    self.ledpixels[8] = 0xff
     self.writestrip(self.ledpixels)
     time.sleep(10)
     self.cls(self.ledpixels)
@@ -146,5 +146,5 @@ class tlc5947:
 
 
 if  __name__ =='__main__':
-        LEDs=tlc5947(23)
+        LEDs=tlc5947(19)
         LEDs.main()

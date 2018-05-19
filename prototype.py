@@ -6,7 +6,7 @@ from ws2801 import ws2801
 from tlc5947 import tlc5947
 
 #LEDs=ws2801() # Set the name of our module 
-LEDs=tlc5947(23) # Set the name of our module 
+LEDs=tlc5947(19) # Set the name of our module 
 NUMBER_OF_PIXELS=16 # Set the number of pixels
 ledpixels = [0] * NUMBER_OF_PIXELS # set up the pixel array
 
@@ -88,19 +88,26 @@ try:
 
 		data = client.getjson()
 		if data != 0:
-			print data
+			#print data
 
-			factionname = data['externalApiPortal']['controllingFaction']
+			mainkey = 'externalApiPortal'
+			mainkey = 'status'
+				
+			factionname = data[mainkey]['controllingFaction']
 			if factionname == "Enlightened":
+				faction = 1
+			elif factionname == "1":
 				faction = 1
 			elif factionname == "Resistance":
 				faction = 2
+			elif factionname == "2":
+				faction = 2
 			else:
 				faction = 0
-			health = int(data['externalApiPortal']['health'])
+			health = int(data[mainkey]['health'])
 			setfaction(faction, health)
 
-			dres = data['externalApiPortal']['resonators']
+			dres = data[mainkey]['resonators']
 				
 			for r in range(0, len(dres)):
 				position = resdict[dres[r]['position']]
@@ -109,6 +116,7 @@ try:
 
 			for r in range(0, 8):
 				setresonator(r, reslevel[r], reshealth[r]*10)
+				print r,reslevel[r],reshealth[r]
 
 
 		LEDs.writestrip(ledpixels)
