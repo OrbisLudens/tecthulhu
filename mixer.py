@@ -22,12 +22,16 @@ class tsound:
     def __init__(self):
         pygame.init()
         pygame.mixer.init()
-        self.sounddir = "/home/pi/projects/ingress118apk/assets/sounds/"
+        self.sounddir = "sounds/"
+        pygame.mixer.music.load(self.sounddir + "backgroundloop1.ogg")
+        print "playing music"
+        pygame.mixer.music.play(-1)
 
 
     def deploy(self):
         sound = pygame.mixer.Sound(self.sounddir + "sfx_resonator_power_up.ogg")
         sound.play()
+
 
     def main(self):
         try:  
