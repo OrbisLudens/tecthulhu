@@ -126,7 +126,7 @@ class tlc5947:
     #self.colorwipe(self.ledpixels, self.Color(0, 0, 255), 0.05)
     #self.rainbowCycle(self.ledpixels, 0.00)
     #self.teststrip()
-    self.ledpixels[0] = 0xff
+    self.ledpixels[0] = 0xffffff
     self.ledpixels[1] = 0xffff
     self.ledpixels[2] = 0xff00
     self.ledpixels[3] = 0xffff00
