@@ -2,11 +2,17 @@
 # a prototype portal simulator
 
 import time, sys
-from ws2801 import ws2801 
+#from ws2801 import ws2801 
 from tlc5947 import tlc5947
 
-#LEDs=ws2801() # Set the name of our module 
+# LEDs=ws2801() # Set the name of our module 
 LEDs=tlc5947(19) # Set the name of our module 
+# For Orbis Ludens we have 16 available channels (2 tlc5947)
+# channels 0-7: Resonators
+# channel 8-11: Mods
+# channel 12: Faction Status
+# channel 13: Sphere Illumination?
+# channel 14: Mission Day LEDs ('R'), Mission Banners ('G')
 NUMBER_OF_PIXELS=16 # Set the number of pixels
 ledpixels = [0] * NUMBER_OF_PIXELS # set up the pixel array
 
@@ -88,35 +94,42 @@ try:
 
 		data = client.getjson()
 		if data != 0:
-			#print data
+			print data
 
-			mainkey = 'externalApiPortal'
-			mainkey = 'status'
+			if 'result' in data:
+                            mainkey = 'result'
 				
-			factionname = data[mainkey]['controllingFaction']
-			if factionname == "Enlightened":
+			    factionname = data[mainkey]['controllingFaction']
+			    if factionname == "Enlightened":
 				faction = 1
-			elif factionname == "1":
-				faction = 1
-			elif factionname == "Resistance":
+			    elif factionname == "Resistance":
 				faction = 2
-			elif factionname == "2":
-				faction = 2
-			else:
+			    else:
 				faction = 0
-			health = int(data[mainkey]['health'])
-			setfaction(faction, health)
+			    health = int(data[mainkey]['health'])
+			    setfaction(faction, health)
 
-			dres = data[mainkey]['resonators']
-				
-			for r in range(0, len(dres)):
-				position = resdict[dres[r]['position']]
-				reslevel[position] = int(dres[r]['level'])
-				reshealth[position] = int(dres[r]['health'])
+			    dres = data[mainkey]['resonators']
+                            if dres is None:
+                                print "no resonators"
+                            else:
+			        for r in range(0, len(dres)):
+				    position = resdict[dres[r]['position']]
+				    reslevel[position] = int(dres[r]['level'])
+				    reshealth[position] = int(dres[r]['health'])
 
-			for r in range(0, 8):
-				setresonator(r, reslevel[r], reshealth[r]*10)
-				print r,reslevel[r],reshealth[r]
+			        for r in range(0, 8):
+				    setresonator(r, reslevel[r], reshealth[r]*10)
+				    print r,reslevel[r],reshealth[r]
+                            dmods = data[mainkey]['mods']
+                            if dmods is None:
+                                print "no mods"
+                            else:
+                                for m in range(0, len(dmods)):
+                                    mtype = dmods[m]['type']
+                                    mrare = dmods[m]['rarity']
+                                    slot = dmods[m]['slot']
+                                    print m,mtype,mrare,slot
 
 
 		LEDs.writestrip(ledpixels)
